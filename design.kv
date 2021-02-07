@@ -1,0 +1,1007 @@
+<LoginScreen>:
+    id:  login_screen
+    GridLayout:
+        cols: 1
+        GridLayout:
+            cols:1
+            Label:
+                font_size: 30
+                font_name: 'Arial'
+                color: (0,1,1)
+                text: "User Login"
+            TextInput:
+                id: username
+                hint_text:"Username"
+            TextInput:
+                id: password
+                password: True
+                hint_text:"Password"
+            Button:
+                text: "Log In"
+                size_hint: 0.3, 0.5
+                pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+                on_press: root.auth(root.ids.username.text, root.ids.password.text)
+        GridLayout:
+            cols:2
+            Label:
+                id: under_login
+                text: ""
+                color: (1,0,0)
+            Label:
+                text: '' # empty line
+            Button:
+                text: "Forgot password?"
+                size: (10,10)
+                size_hint: 0.3, 0.5
+                on_press: root.forgot_password()
+            Button:
+                text: "Sign Up"
+                on_press: root.sign_up()
+                size_hint: 0.3, 0.5
+
+
+<SignUpScreen>:
+    GridLayout: #whole screen
+        cols: 1
+        GridLayout: #upper
+            cols: 1
+            Label:
+                text: "Please make an account"
+            TextInput:
+                id: username
+                hint_text:"Username"
+            TextInput:
+                id: password
+                hint_text: "Password"
+            TextInput:
+                id: email
+                hint_text: "Email"
+        GridLayout: #lower
+            cols:2
+            Label:
+                id: sign_up_result
+                text: ""
+                color: (1,0,0)
+            Label:
+                text: "" #empty
+            Button:
+                text: "Back"
+                on_press: root.back()
+            Button:
+                text: "Submit"
+                on_press: root.sign_up(root.ids.username.text, root.ids.password.text, root.ids.email.text)
+
+
+<MainScreen>:
+    GridLayout: #whole screen
+        cols:1
+        GridLayout: #upper
+            cols: 2
+            row_default_height: 40
+            row_force_default: True
+            Button:
+                text: "Log Out"
+                size_hint: 0.3, 0.5
+                on_press: root.logout()
+            Label:
+                text: 'Main Menu'
+                size_hint: 0.3, 0.5
+        GridLayout: #middle
+            cols:1
+            Label:
+                text: "" #empty
+        GridLayout: #lower
+            cols: 2
+            Button:
+                text: "Pregled prepiske"
+                on_press: root.menu_correspondence()
+            Button:
+                text: "Korisnici"
+                on_press: root.menu_users()
+            Button:
+                text: "Zahtevi"
+                on_press: root.menu_requests()
+            Button:
+                text: "Pregled statusa zahteva"
+                on_press: root.menu_status()
+
+
+<CorrespondenceMain>
+    cols: 6
+    author_text: 'Naziv autora'
+    institution_text: 'Naziv institucije'
+    date_text: 'Datum '
+    pages_text: 'Broj strana '
+    topic_text: 'Tema'
+    sig_text: 'Signatura'
+    pos: self.pos
+    size: self.size
+    Label:
+        text: root.author_text
+    Label:
+        text: root.institution_text
+    Label:
+        text: root.date_text
+    Label:
+        text: root.pages_text
+    Label:
+        text: root.topic_text
+    Label:
+        text: root.sig_text
+
+
+<CorrespondenceRV>
+    viewclass:'CorrespondenceMain'
+    RecycleGridLayout:
+        cols: 1
+        default_size: None, dp(26)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+
+
+<Correspondence>:
+    GridLayout:
+        cols: 1
+        GridLayout: #upper
+            cols:1
+            Label:
+                size_hint_y: 0.25
+                text: "Pregled prepiske"
+                font_size: 30
+                font_name: 'Arial'
+                color: (0,1,1)
+            GridLayout:
+                cols: 2
+                row_default_height: 40
+                row_force_default: True
+                Button:
+                    size_hint_y: 0.25
+                    text: 'Main Menu'
+                    on_press: root.main_menu()
+                Button:
+                    size_hint_y: 0.25
+                    text: "Prikaži čitavu prepisku"
+                    on_press: correspondence_rv.get_corr()
+                Label: # empty
+                    text: ""
+                Label: # empty
+                    text: ""
+                Label:
+                    text: "Pretraga po nazivu autora/institucije"
+                TextInput:
+                    hint_text: "Unesite naziv autora ili inistitucije"
+                    multiline: False
+                    id: corr_text_input
+                    on_text: correspondence_rv.text_input_search(corr_text_input)
+                Label:
+                    text: "" #Empty
+                Label:
+                    text:"" #Empty
+                Label:
+                    text: "Pretraga po godini (1895-1927)"
+                GridLayout:
+                    row_default_height: 40
+                    row_force_default: True
+                    cols: 5
+                    spacing: 15
+                    Label:
+                        text: "Godina od"
+                    TextInput:
+                        hint_text: '1895'
+                        id: godina_od
+                    Label:
+                        text: "Godina do"
+                    TextInput:
+                        hint_text: '1927'
+                        id: godina_do
+                    Button:
+                        text: "Pretraži"
+                        on_press: correspondence_rv.date_search(godina_od, godina_do)
+                Label: #empty
+                Label: #empty
+                GridLayout:
+                    row_default_height: 20
+                    row_force_default: True
+                    cols: 2
+                    Label:
+                        text: 'Prepiska sa univerzitetom'
+                    CheckBox:
+                        id: univerzitet
+                        active: True
+                        name: 'univerzitet'
+                        on_active: correspondence_rv.checkbox_search(univerzitet.active, univerzitet.name)
+                    Label:
+                        text: 'Prepiska sa ambasadom'
+                    CheckBox:
+                        id: ambasada
+                        active: True
+                        name: 'ambasada'
+                        on_active: correspondence_rv.checkbox_search(ambasada.active,ambasada.name)
+                    Label:
+                        text: 'Patenti'
+                    CheckBox:
+                        id: patenti
+                        active: True
+                        name: 'patenti'
+                        on_active: correspondence_rv.checkbox_search(patenti.active, patenti.name)
+                GridLayout:
+                    row_default_height: 20
+                    row_force_default: True
+                    cols: 2
+                    Label:
+                        text: 'Čestitke'
+                    CheckBox:
+                        id: cestitke
+                        active: True
+                        name: 'cestitke'
+                        on_active: correspondence_rv.checkbox_search(cestitke.active, cestitke.name)
+                    Label:
+                        text: 'Razno'
+                    CheckBox:
+                        id: razno
+                        active: True
+                        name: 'razno'
+                        on_active: correspondence_rv.checkbox_search(razno.active, razno.name)
+        GridLayout: #lower
+            cols: 1
+            CorrespondenceMain
+                size_hint_y: 0.25
+            CorrespondenceRV
+                id: correspondence_rv
+
+<UsersMain>
+    id: users_main
+    cols:6
+    size_hint_y: 0.25
+    index_text: ""
+    cb_status: False
+    korisnikid_text: "Korisnik ID"
+    mlb_text: "MLB"
+    naziv_korisnika_text: "Naziv korisnika"
+    ulica_text : 'Ulica'
+    broj_text: 'Broj'
+    grad_text: 'Grad'
+    drzava_text: 'Drzava'
+    telefon_text: "Telefon"
+    mail_text: "Mail"
+    text: root.index_text # currently not in use, wanted to adjust textbox data with ID, but couldn't do it
+    text: root.korisnikid_text # hidden, used for communication with db
+    TextInput:
+        size_hint_x: 0.5
+        multiline: False
+        write_tab: False
+        font_size: 14
+        font_name: 'Arial'
+        id: mlb_id
+        text: root.mlb_text
+        on_text_validate: root.u_update('mlb', mlb_id.text)
+    TextInput:
+        size_hint_x: 0.5
+        multiline: False
+        write_tab: False
+        font_size: 14
+        font_name: 'Arial'
+        text: root.naziv_korisnika_text
+        id: naziv_korisnika_id
+        on_text_validate: root.u_update('naziv_korisnika', naziv_korisnika_id.text)
+    GridLayout:
+        cols: 4
+        size_hint_x: 1.5
+        TextInput:
+            size_hint_x: 0.75
+            multiline: False
+            write_tab: False
+            font_size: 14
+            font_name: 'Arial'
+            text: root.ulica_text
+            id: ulica_id
+            on_text_validate: root.u_update('adresa_korisnika.ulica', ulica_id.text)
+        TextInput:
+            size_hint_x: 0.5
+            multiline: False
+            write_tab: False
+            font_size: 14
+            font_name: 'Arial'
+            text: root.broj_text
+            id: broj_id
+            on_text_validate: root.u_update('adresa_korisnika.broj', broj_id.text)
+        TextInput:
+            multiline: False
+            write_tab: False
+            font_size: 14
+            font_name: 'Arial'
+            text: root.grad_text
+            id: grad_id
+            on_text_validate: root.u_update('adresa_korisnika.grad', grad_id.text)
+        TextInput:
+            multiline: False
+            write_tab: False
+            font_size: 14
+            font_name: 'Arial'
+            text: root.drzava_text
+            id: drzava_id
+            on_text_validate: root.u_update('adresa_korisnika.drzava', drzava_id.text)
+    TextInput:
+        size_hint_x: 0.5
+        multiline: False
+        write_tab: False
+        font_size: 14
+        font_name: 'Arial'
+        text: root.telefon_text
+        id: telefon_id
+        on_text_validate: root.u_update('telefon', telefon_id.text)
+    TextInput:
+        size_hint_x: 0.5
+        multiline: False
+        write_tab: False
+        font_size: 14
+        font_name: 'Arial'
+        text: root.mail_text
+        id:mail_id
+        on_text_validate: root.u_update('mail', mail_id.text)
+    CheckBox:
+        size_hint_x: 0.35
+        multiline: False
+        write_tab: False
+        active: root.cb_status
+        id: korisnik_cb
+        on_active: root.cb_active(self.active)
+
+<UsersMainLabel>: #just the layout
+    cols: 6
+    Label:
+        size_hint_x: 0.5
+        text: 'MLB'
+    Label:
+        size_hint_x: 0.5
+        text: 'Naziv korisnika'
+    GridLayout:
+        size_hint_x: 1.5
+        cols:4
+        Label:
+            text: 'Ulica'
+            size_hint_x: 0.75
+        Label:
+            size_hint_x: 0.5
+            text: 'Broj'
+        Label:
+            text: 'Grad'
+        Label:
+            text: 'Država'
+    Label:
+        size_hint_x: 0.5
+        text: 'Telefon'
+    Label:
+        size_hint_x: 0.5
+        text: 'Mail'
+    Label:
+        text: 'Select'
+        size_hint_x: 0.35
+
+
+<UsersRV>
+    viewclass:'UsersMain'
+    RecycleGridLayout:
+        cols: 1
+        default_size: None, dp(26)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+
+<Users>:
+    GridLayout:
+        cols: 1
+        GridLayout:
+            size_hint_y: 0.25
+            spacing: 10
+            padding: 5
+            cols:2
+            Button:
+                text: 'Main Menu'
+                on_press: root.main_menu()
+            Button:
+                text: 'Zahtevi'
+                on_press: root.requests_scr()
+        GridLayout: #upper
+            cols: 1
+            Label:
+             #   size_hint_y: 0.25
+                text: "Pregled korisnika"
+                font_size: 30
+                font_name: 'Arial'
+                color: (0,1,1)
+            Label:
+           #    size_hint_y: 0.25
+                id: error_message
+                text: ""
+        GridLayout:
+            spacing: 5
+            padding: 5
+            size_hint_y: 0.40
+            row_default_height: 40
+            row_force_default: True
+            cols:2
+            Label:
+                size_hint_y: 0.25
+                text: 'Pretraži korisnika po imenu'
+            TextInput:
+                size_hint_x: 0.5
+                id: users_text_input
+                size_hint_y: 0.25
+                hint_text: 'Unesite ime korisnika..'
+                on_text: users_rv.text_input_search(users_text_input.text)
+            Label: #empty
+            GridLayout:
+                size_hint_y: 0.25
+                cols: 3
+
+                Button:
+                    size_hint_x: 0.45
+                    text: "Dodaj zahtev"
+                    background_color: (0,1,0)
+                    on_press: root.add_request()
+                    on_press: users_text_input.text = ''
+                Button:
+                    size_hint_x: 0.45
+                    text: "Obriši korisnika"
+                    background_color: (1,0,0)
+                    on_press: root.delete_user()
+                    on_press: users_text_input.text = ''
+                    on_press: users_rv.refresh_from_data()
+        GridLayout:
+            cols: 1
+            UsersMainLabel
+                size_hint_y: 0.25
+            UsersRV
+                id: users_rv
+            GridLayout:
+                size_hint_y: 0.25
+                cols: 6
+                TextInput:
+                    write_tab: False
+                    size_hint_x: 0.5
+                    hint_text: "MLB"
+                    id: mlb_insert
+                TextInput:
+                    write_tab: False
+                    size_hint_x: 0.5
+                    hint_text: "Naziv korisnika"
+                    id: naziv_korisnika_insert
+                GridLayout:
+                    cols: 4
+                    size_hint_x: 1.5
+                    TextInput:
+                        write_tab: False
+                        size_hint_x: 0.75
+                        hint_text: "Ulica"
+                        id: ulica_insert
+                    TextInput:
+                        write_tab: False
+                        size_hint_x: 0.5
+                        hint_text: "Broj"
+                        id: broj_insert
+                    TextInput:
+                        write_tab: False
+                        hint_text: 'Grad'
+                        id: grad_insert
+                    TextInput:
+                        write_tab: False
+                        hint_text: "Drzava"
+                        id: drzava_insert
+                TextInput:
+                    write_tab: False
+                    size_hint_x: 0.5
+                    hint_text: "Telefon"
+                    id: telefon_insert
+                TextInput:
+                    write_tab: False
+                    size_hint_x: 0.5
+                    hint_text: "Mail"
+                    id: mail_insert
+                Button:
+                    size_hint_y: 0.20
+                    size_hint_x: 0.35
+                    text: "Insert"
+                    on_press: root.u_insert(mlb_insert.text, naziv_korisnika_insert.text, ulica_insert.text, broj_insert.text, grad_insert.text, drzava_insert.text,telefon_insert.text, mail_insert.text)
+                    on_press: users_rv.refresh_from_data()
+
+
+#REQUESTS
+
+<TrazenaDokLayout>:
+    cols: 6
+    Label:
+        size_hint_x: 0.2
+        text: 'Pismo ID'
+    Label:
+        size_hint_x: 0.6
+        text: 'Autor'
+    Label:
+        text: 'Insitucija'
+    Label:
+        size_hint_x: 0.4
+        text: 'Datum'
+    Label:
+        size_hint_x: 0.3
+        text: 'Broj strana'
+        multiline: True
+    Label:
+        size_hint_x: 0.25
+
+<TrazenaDokRV>
+    viewclass:'TrazenaDok'
+    RecycleGridLayout:
+        id: requests_rv_main_id
+        cols: 1
+        default_size: None, dp(26)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+
+
+<TrazenaDok>:
+    cols: 6
+    pismoid_text: 'Pismo ID'
+    autor_text: 'Autor'
+    institucija_text: 'Insitucija'
+    datum_text: 'Datum'
+    brstr_text: 'Brstr'
+    zahtevid_text: '' #hidden
+    Label:
+        size_hint_x: 0.2
+        text: root.pismoid_text
+    Label:
+        text: root.autor_text
+        size_hint_x: 0.6
+    Label:
+        size_hint_x: 0.8
+        text: root.institucija_text
+    Label:
+        size_hint_x: 0.4
+        text: root.datum_text
+    Label:
+        size_hint_x: 0.25
+        text: root.brstr_text
+    Button:
+        size_hint_x: 0.25
+        text: 'Dodaj'
+        on_release: root.dodaj_pismo()
+
+
+<TrazenaDokScroll>
+    ScrollView:
+        do_scroll_x: False
+        do_scroll_y: True
+        GridLayout:
+            id: content
+            cols:1
+            spacing: 20
+            padding: 10
+            default_size: None, dp(26)
+            default_size_hint: 1, None
+            size_hint_y: None
+            height: self.minimum_height
+
+<TrazenaDokPopup>:
+    on_open: trazenadok_rvid.trazenadokrv_load_data(self.zahtevid)
+    on_open: scrollview_id.trazenadokscroll_load_data(self.zahtevid)
+    id: trazenadok_popup_id
+    title: 'Tražena dokumenta'
+    auto_dismiss: False
+    GridLayout:
+        cols:1
+        GridLayout:
+            cols:2
+            TrazenaDokLayout
+                size_hint_y: 0.25
+            TrazenaDokLayout:
+                size_hint_y: 0.25
+            TrazenaDokScroll
+                id: scrollview_id
+            TrazenaDokRV
+                id: trazenadok_rvid
+        GridLayout:
+            size_hint_y: 0.20
+            cols:2
+            Button:
+                on_release: scrollview_id.remove_all(trazenadok_popup_id.zahtevid)
+                text: 'Izbaci sva pisma'
+            Button:
+                text: 'Refresh'
+                on_release: trazenadok_rvid.trazenadokrv_load_data(trazenadok_popup_id.zahtevid)
+                on_release: scrollview_id.trazenadokscroll_load_data(trazenadok_popup_id.zahtevid)
+            Button:
+                text: 'Ažuriraj tražena dokumenta'
+                on_release: scrollview_id.update_trazenadok(trazenadok_popup_id.zahtevid)
+                background_color:(0,1,0)
+            Button:
+                text: 'Zatvori!'
+                on_release: root.dismiss()
+
+
+<RequestsRV>
+    viewclass:'RequestsMain'
+    RecycleGridLayout:
+        id: requests_rv_main_id
+        cols: 1
+        default_size: None, dp(26)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+
+
+<RequestsMain>
+    id: requests_main_id
+    cols: 7
+    spacing: 10
+    z_idx_text: '' #hudden, used for refreshing attrs
+    z_korisnikdid_text: '' # hidden used for communication with db
+    z_mlb_text: 'MLB'
+    z_naziv_korisnika_text: 'Naziv korisnika'
+    z_datum_text: 'Datum podnošenja'
+    z_trazenadok_text: 'Trazena dok'
+    z_detalji_text: 'Detalji'
+    zahtevid_text: 'Zahtev id'
+    z_status_text: 'Poslednji status'
+    Button:
+        text: root.z_detalji_text
+        on_press: root.open_detalji(root.zahtevid_text)
+    Label:
+        text: root.z_status_text
+    Label:
+        text: root.z_mlb_text
+    Label:
+        text: root.z_naziv_korisnika_text
+    TextInput:
+        text: root.z_datum_text
+        multiline: False
+        write_tab: False
+        on_text_validate: root.update_date(self.text)
+    Button:
+        size_hint_x: 0.5
+        id: trazenadok_id
+        text: root.z_trazenadok_text
+        on_press: root.open_trazenadok(root.zahtevid_text)
+    Button:
+        size_hint_x: 0.5
+        text: 'Obriši'
+        background_color: (1,0,0)
+        on_press: root.delete_request()
+
+
+<RequestsMainLabel>
+    size_hint_y: 0.25
+    cols: 7
+    spacing: 10
+    Label:
+        text: 'Izmeni detalje zahteva'
+    Label:
+        text: 'Aktuelni status'
+    Label:
+        text: 'MLB'
+    Label:
+        text: 'Naziv korisnika'
+    Label:
+        text: 'Datum podnošenja '
+    Label:
+        size_hint_x: 0.5
+        text: 'Odaberi dokumenta'
+    Label:
+        size_hint_x: 0.5
+        text: 'Obriši zahtev'
+
+<Requests>:
+    GridLayout:
+        cols: 1
+        GridLayout:
+            cols: 2
+            size_hint_y: 0.4
+            spacing: 10
+            padding: 10
+            Button:
+                text: 'Main Menu'
+                on_press: root.main_menu()
+            Button:
+                text: 'Korisnici'
+                on_press: root.users()
+            Button:
+                text: 'Status zahteva'
+                on_press: root.status()
+
+            Button:
+                text: 'Refresh'
+                on_press:requests_rv.requests_populate()
+        GridLayout: #upperoro
+            cols: 1
+        #    size_hint_y: 0.25
+            Label:
+             #   size_hint_y: 0.25
+                text: "Zahtevi"
+                font_size: 30
+                font_name: 'Arial'
+                color: (0,1,1)
+            Label:
+            #   size_hint_y: 0.25
+                id: error_message
+                text: ""
+            GridLayout:
+              #  size_hint_y: 0.6
+                cols: 2
+                Label:
+                    text: "Pretraga zahteva po imenu korisnika"
+                TextInput:
+                    hint_text: 'Unesite ime korisnika'
+                    on_text: requests_rv.requests_search(self.text)
+                Label:
+            RequestsMainLabel
+        GridLayout:
+            cols:1
+
+            RequestsRV
+                id: requests_rv
+
+<DetaljiPopup>
+    id: detalji_popup
+    title: 'Detalji ugovora'
+    auto_dismiss: False
+    drzava_text: ''
+    neophodna_potvrda_text: 'Potvrda neophodna'
+    GridLayout: #main
+        cols: 1
+        GridLayout:
+            size_hint_y:0.25
+            cols: 1
+            Label:
+                font_size: 22
+                font_name: 'Arial'
+                id: error_message
+                text: ''
+        GridLayout:
+            size_hint_y: 1
+            spacing: 25
+            padding: 25
+            cols: 3
+            ToggleButton:
+                id: prihvati_zahtev_id
+                size_hint_y: 0.25
+                text: 'Prihvati zahtev'
+                group: 'zahtev'
+                state: 'normal'
+                on_press: root.prihvati(self.state)
+            Label: #empty
+            ToggleButton:
+                id: odbij_zahtev_id
+                size_hint_y: 0.25
+                text: 'Odbij zahtev'
+                group: 'zahtev'
+                state: 'normal'
+                on_press: root.odbij(self.state)
+            Label:
+                text: 'Drzava korisnika'
+            Label:
+                text: root.neophodna_potvrda_text
+                multiline: True
+            Label:
+                text: 'Odgovor ministarstva'
+            TextInput:
+                size_hint_x: 0.2
+                id: drzavaid
+                multiline: False
+                write_tab: False
+                text: root.drzava_text
+                on_text_validate: root.update_drzava(drzavaid.text)
+            Button:
+                text: "Trazi potvrdu"
+                on_release: root.upit_mk()
+                id: trazi_potvrduid
+            GridLayout:
+                cols:2
+                ToggleButton:
+                    id: mk_potvrdaid
+                    text: 'Dozvoljeno'
+                    group: 'MK'
+                    state: 'normal'
+                    on_release: root.zahtev_mk_povtrdjen(self.state)
+                ToggleButton:
+                    id: mk_odbijenoid
+                    text: 'Odbijeno'
+                    group: 'MK'
+                    state: 'normal'
+                    on_release: root.zahtev_mk_odbijen(self.state)
+            Label:
+                text: 'Cena po strani'
+            TextInput:
+                id: cena_po_straniid
+                multiline: False
+                write_tab: False
+                text: ''
+                on_text_validate: root.update_ugovor('cena_po_strani', self.text)
+            GridLayout:
+                cols: 2
+                Button:
+                    text: 'Generiši ugovor'
+                    on_release: root.generisi_ugovor()
+                ToggleButton:
+                    id: ugovorid
+                    state: 'normal'
+                    text: 'Pošalji ugovor'
+                    on_release: root.posalji_ugovor(ugovorid.state)
+            Label:
+                text: 'Ukupno strana'
+            TextInput:
+                id: ukupno_stranaid
+                multiline: False
+                write_tab: False
+                text: ''
+                on_text_validate: root.update_ugovor('ukupno_strana', self.text)
+            GridLayout:
+                cols: 2
+                Button:
+                    text: 'Instrukcije plaćanja'
+                    on_press: root.posalji_instrukcije()
+                ToggleButton:
+                    id: uplataid
+                    text: 'Uplata proknjižen'
+                    state: 'normal'
+                    on_release: root.uplata_proknjizena(uplataid.state)
+            Label:
+                text: 'Ukupna cena'
+            TextInput:
+                id: ukupna_cenaid
+                multiline: False
+                write_tab: False
+                text: ''
+                on_text_validate: root.update_ugovor('ukupna_cena', self.text)
+            GridLayout:
+                cols: 2
+                Label: #empty
+                ToggleButton:
+                    id: racunid
+                    text: ' Pošalji račun'
+                    state: 'normal'
+                    on_release: root.posalji_racun(racunid.state)
+        GridLayout:
+            size_hint_y: 0.15
+            cols: 3
+            Label: #empty
+            Label: #empty
+            Button:
+                text: 'Zatvori!'
+                on_release: root.dismiss()
+
+<StatusMain>
+    naziv_korisnika_tekst: 'Naziv korisnika'
+    zahtevid_text: 'Zahtev ID'
+    aktuelni_status_text: 'Aktuelni status'
+    datum_text: 'Datum promene'
+    cols: 5
+    Label:
+        id: naziv_korisnikaid
+        text: root.naziv_korisnika_tekst
+    TextInput:
+        multiline: False
+        write_tab: False
+        text: root.zahtevid_text
+        on_text_validate: root.update_sz('zahtevid', self.text)
+    TextInput:
+        id: aktuelni_statusid
+        multiline: False
+        write_tab: False
+        text: root.aktuelni_status_text
+        on_text_validate: root.update_sz('aktuelni_status', self.text)
+    TextInput:
+        multiline: False
+        write_tab: False
+        text: root.datum_text
+        on_text_validate: root.update_sz('datum', self.text)
+    Button:
+        size_hint_x: 0.25
+        background_color: (0,0,0)
+        text: 'Delete'
+        on_release: root.delete_sz()
+
+<StatusRV>
+    viewclass: 'StatusMain'
+    RecycleGridLayout:
+        id: requests_rv_main_id
+        cols: 1
+        default_size: None, dp(26)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+
+
+<Status>:
+    GridLayout:
+        cols: 1
+        GridLayout:
+            size_hint_y: 0.25
+            cols: 1
+            Label:
+                id: error_message
+                text: ''
+        GridLayout:
+            size_hint_y: 0.25
+            cols: 3
+            Label:
+                text: "Pretraga po broju zahteva"
+            TextInput:
+                multiline: False
+                write_tab: False
+                hint_text: 'Broj zahteva'
+                on_text_validate: statusrv_id.id_search(self.text)
+            Label: #empty
+            Label:
+                text: "Pretraga po naizvu korisnika"
+            TextInput:
+                hint_text: 'Naziv korisnika'
+                on_text: statusrv_id.text_search(self.text)
+            Button:
+                text: 'Refresh'
+                on_release: statusrv_id.refresh()
+            Label: #empty
+            Label:
+                text: 'Prikaži samo poslednji status'
+            CheckBox:
+                id: cb_state_id
+                state: 'normal'
+        GridLayout:
+            cols: 1
+            GridLayout:
+                size_hint_y: 0.25
+                cols: 5
+                Label:
+                    text: 'Naziv autora'
+                Label:
+                    text: 'Zahtev ID'
+                Label:
+                    text: 'Aktuelni status'
+                Label:
+                    text: 'Datum'
+                Label:
+                    size_hint_x: 0.25
+                    text: 'Obriši'
+            StatusRV
+                id: statusrv_id
+        GridLayout:
+            size_hint_y:0.15
+            cols:3
+            Button:
+                text: 'Zahtevi'
+                on_press: root.zahtevi()
+            Label:
+            Button:
+                text: 'Main Menu'
+                on_press: root.main_menu()
+
+<RootWidget>:
+    LoginScreen:
+        id: login_screen_id
+        name: "login_screen"
+
+    SignUpScreen:
+        id: sign_up_screen_id
+        name: "sign_up_screen"
+
+    MainScreen:
+        id: main_screen_id
+        name: "main_screen"
+
+    Correspondence:
+        id: correspondence_id
+        name: "correspondence_screen"
+
+    Users:
+        id: users_id
+        name: "users_screen"
+
+    Requests
+        id: requests_id
+        name: "requests_screen"
+
+    Status:
+        id: status_id
+        name: "status_screen"
+
+#(App.get_running_app().root.ids) all the screen IDs

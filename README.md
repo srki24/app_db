@@ -1,4 +1,8 @@
 # app_db
+
+Tested on Windows, Kivy might not work on different OS.
+
+
 Postgres database app made in python with kivy, and psycopg2 . 
 
 The app was made for a school project, with a prerequisition that querry errors are shown to the final user.
